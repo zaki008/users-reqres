@@ -152,7 +152,7 @@ const Login = () => {
               }}
             </Formik>
             <Typography fontSize={12}>
-              Don't have an account?{" "}
+              Don&apos;t have an account?
               <Link style={{ color: "#7FA1C3" }} href={"/auth/register"}>
                 Sign up
               </Link>
