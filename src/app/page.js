@@ -1,95 +1,202 @@
+"use client";
+import { Box, Button, Container, Grid2, Typography } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import { DataGrid } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+
+import Header from "@/components/Header";
+import { getUsers, updateData } from "@/redux/slice/userSlice";
+import Cookies from "js-cookie";
 import Image from "next/image";
-import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+const Home = () => {
+  const router = useRouter();
+  const { data, isLoading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [paginationModel] = useState({
+    page: data.page - 1 || 0,
+    pageSize: data.per_page || 10,
+  });
+  const [anchorEl, setAnchorEl] = useState(null);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    dispatch(getUsers(data));
+  }, [data.page, data.per_page]);
+
+  const handlePaginationModelChange = (newModel) => {
+    dispatch(
+      updateData({ page: newModel.page + 1, per_page: newModel.pageSize })
+    );
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("tokenLogin");
+    router.push("/auth/login");
+  };
+
+  const columns = [
+    {
+      field: "image",
+      headerName: "Image",
+      flex: 1,
+      minWidth: 120,
+      disableColumnMenu: true,
+      headerAlign: "center",
+      align: "center",
+      renderHeader: (params) => {
+        return (
+          <Typography sx={{ fontWeight: "bold", textAlign: "center" }}>
+            {params.colDef.headerName}
+          </Typography>
+        );
+      },
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              style={{ marginTop: 10 }}
+              width={50}
+              height={50}
+              src={params?.row?.avatar}
+              alt="image"
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+          </Box>
+        );
+      },
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 1,
+      minWidth: 120,
+      disableColumnMenu: true,
+      headerAlign: "center",
+      align: "center",
+      renderHeader: (params) => {
+        return (
+          <Typography sx={{ fontWeight: "bold" }}>
+            {params.colDef.headerName}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "first_name",
+      headerName: "First name",
+      flex: 1,
+      minWidth: 120,
+      disableColumnMenu: true,
+      headerAlign: "center",
+      align: "center",
+      renderHeader: (params) => {
+        return (
+          <Typography sx={{ fontWeight: "bold" }}>
+            {params.colDef.headerName}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      minWidth: 120,
+      sortable: false,
+      disableColumnMenu: true,
+      headerAlign: "center",
+      align: "center",
+      renderHeader: (params) => {
+        return (
+          <Typography sx={{ fontWeight: "bold" }}>
+            {params.colDef.headerName}
+          </Typography>
+        );
+      },
+      renderCell: (params) => {
+        return (
+          <Box
+            style={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "center",
+            }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            <Button
+              variant="contained"
+              size="small"
+              color="success"
+              onClick={() => router.push(`user/${params?.row?.id}`)}
+              sx={{ marginRight: 1 }}
+            >
+              View
+            </Button>
+          </Box>
+        );
+      },
+    },
+  ];
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  console.log({ paginationModel });
+
+  return (
+    <>
+      <Header />
+      <Container maxWidth="md">
+        <Grid2 container justifyContent={"center"}>
+          <Grid2 size={12} marginTop={3}>
+            <Box
+              sx={{
+                justifyContent: "space-between",
+                display: "flex",
+                alignItems: "center",
+                marginBottom: 3,
+              }}
+            >
+              <Typography variant="h4">List Users</Typography>
+              <Button variant="contained" color="error" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Box>
+          </Grid2>
+          <Grid2 size={12} sx={{ justifyContent: "center", display: "flex" }}>
+            <Paper
+              sx={{
+                maxHeight: 500,
+                width: { xs: "100%", md: "100%", lg: "100%" },
+              }}
+            >
+              <DataGrid
+                loading={isLoading ? true : false}
+                rows={data.data}
+                columns={columns}
+                initialState={{ pagination: { paginationModel } }}
+                pageSizeOptions={[5, 10, 20, 30]}
+                sx={{ border: "1px solid #d4d4d4" }}
+                onPaginationModelChange={handlePaginationModelChange}
+                getRowId={(row) => row.id}
+                rowCount={data.total}
+                paginationMode="server"
+                rowHeight={80}
+              />
+            </Paper>
+          </Grid2>
+        </Grid2>
+      </Container>
+    </>
   );
-}
+};
+
+export default Home;
