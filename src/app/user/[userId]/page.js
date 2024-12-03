@@ -18,8 +18,8 @@ export default function UserDetail() {
   const params = useParams();
 
   useEffect(() => {
-    dispatch(getDetailUser(params.userId));
-  }, []);
+    dispatch(getDetailUser(params?.userId));
+  }, [params?.userId, dispatch]);
 
   return (
     <>
@@ -64,11 +64,11 @@ export default function UserDetail() {
                       />
                       <ItemDetail
                         label={"Last Name"}
-                        fill={`: ${detailUser.data.last_name || "-"} `}
+                        fill={`: ${detailUser?.data?.last_name || "-"} `}
                       />
                       <ItemDetail
                         label={"Email"}
-                        fill={`: ${detailUser.data.email || "-"}`}
+                        fill={`: ${detailUser?.data?.email || "-"}`}
                       />
 
                       <Button

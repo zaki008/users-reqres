@@ -10,7 +10,7 @@ const ItemDetail = ({ label, fill }) => {
         marginBottom: 2,
       }}
     >
-      <span className={styles.label}>{label}</span>{" "}
+      <span className={styles.label}>{label}</span>
       <span className={styles.fill}>{fill}</span>
     </Box>
   );
