@@ -71,10 +71,8 @@ export const getDetailUser = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const data = await axios.get(`${API_HOST.baseApi}users/${id}`);
-      console.log("detail", data);
       return data.data;
     } catch (err) {
-      console.log("err detail", err);
       const errorMessage = err.response?.data || "Something went wrong";
       return thunkAPI.rejectWithValue(errorMessage);
     }

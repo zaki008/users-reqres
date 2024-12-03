@@ -21,8 +21,6 @@ export default function UserDetail() {
     dispatch(getDetailUser(params.userId));
   }, []);
 
-  console.log("detail user", detailUser);
-
   return (
     <>
       <Header />
@@ -50,7 +48,10 @@ export default function UserDetail() {
                       width={300}
                       height={200}
                       style={{ borderRadius: 12, marginRight: 20 }}
-                      src={detailUser.data.avatar}
+                      src={
+                        detailUser?.data?.avatar ||
+                        "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1733193477~exp=1733197077~hmac=164cf990982a371c74560000aeb04740a5056ab75677e35b3b117d851765f24f&w=740"
+                      }
                       alt="image"
                     />
                     <Box>
@@ -59,15 +60,15 @@ export default function UserDetail() {
                       </Typography>
                       <ItemDetail
                         label={"First Name"}
-                        fill={`: ${detailUser.data.first_name}`}
+                        fill={`: ${detailUser?.data?.first_name || "-"}`}
                       />
                       <ItemDetail
                         label={"Last Name"}
-                        fill={`: ${detailUser.data.last_name} `}
+                        fill={`: ${detailUser.data.last_name || "-"} `}
                       />
                       <ItemDetail
                         label={"Email"}
-                        fill={`: ${detailUser.data.email}`}
+                        fill={`: ${detailUser.data.email || "-"}`}
                       />
 
                       <Button
